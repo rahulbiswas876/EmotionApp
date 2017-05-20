@@ -55,9 +55,10 @@
             <ImageButton
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:id="@+id/sendMsgBtn"
                 android:src="@drawable/send"
                 android:scaleType="centerCrop"
-                android:onClick="onClickButton"/>
+                />
         </LinearLayout>
 
     </LinearLayout>

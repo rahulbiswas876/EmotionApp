@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private final static int DB_VERSION = 6;
+    private final static int DB_VERSION = 7;
     private final static String DB_NAME = "emotionDB";
 
     private final static String CREATE_TABLE = "CREATE TABLE  emotion " +
@@ -42,14 +42,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE);
+        sqLiteDatabase.execSQL(CREATE_USR_MSG_TABLE);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        //sqLiteDatabase.execSQL("Drop table emotion");
-        sqLiteDatabase.execSQL(CREATE_USR_MSG_TABLE);
-        //onCreate(sqLiteDatabase);
+        sqLiteDatabase.execSQL("Drop table emotion");
+        sqLiteDatabase.execSQL("Drop table UserPostMsg");
+        onCreate(sqLiteDatabase);
     }
 
 }

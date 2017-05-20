@@ -15,11 +15,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.Toast;
 
 public class WriteNotesActivity extends AppCompatActivity {
     String capturedImageFilePath = "";
@@ -29,6 +31,14 @@ public class WriteNotesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_notes);
+
+        ImageButton sendMsgBtn = (ImageButton)findViewById(R.id.sendMsgBtn);
+        sendMsgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickSendMsgButton();
+            }
+        });
 
         Intent intent = getIntent();
         if(isActivityStratedOnClickingListItem(intent)){
@@ -75,6 +85,7 @@ public class WriteNotesActivity extends AppCompatActivity {
             //new ImageLoader(null, this).execute(capturedImageFilePath);
             //new DoNetworkTask(this).execute(capturedImageFilePath);
             //createMessage("system", "Diary: Would you like to tell me something about today ?");
+            Toast.makeText(this,"Test",Toast.LENGTH_SHORT).show();
             new ImageLoader(null, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, capturedImageFilePath);
             new DoNetworkTask(this, false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, capturedImageFilePath);
         }
@@ -124,7 +135,7 @@ public class WriteNotesActivity extends AppCompatActivity {
     }
 
     //On send text button
-    protected void onClickButton(View view) {
+    protected void onClickSendMsgButton() {
         EditText messageText = (EditText) findViewById(R.id.messageText);
         String message = messageText.getText().toString();
         if ( message != null && !message.isEmpty() ) {
@@ -135,7 +146,7 @@ public class WriteNotesActivity extends AppCompatActivity {
             UserMsg.InserMsg(getApplicationContext(),capturedImageFilePath, message);
             messageText.setText("");
         }
-        Log.d("TAG", "onClickButton: After Click");
+        Log.d("TAG", "onClickSendMsgButton: After Click");
     }
 
     protected int maxOfThree(float x, float y, float z) {
