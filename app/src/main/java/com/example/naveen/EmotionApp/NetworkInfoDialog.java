@@ -43,7 +43,8 @@ public class NetworkInfoDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Build the dialog and set up the button click handlers
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.NetworkMsg)
+        builder.setTitle("No Inter Connection")
+                .setMessage(R.string.NetworkMsg)
                 .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Send the positive button event back to the host activity

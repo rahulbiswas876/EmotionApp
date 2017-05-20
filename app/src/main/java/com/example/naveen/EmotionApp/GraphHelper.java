@@ -31,35 +31,43 @@ public class GraphHelper {
         try {
             graphView.removeAllSeries();
             //graphView.getGridLabelRenderer().reloadStyles();
-            DataPoint[] anger = new DataPoint[list.size()];
-            DataPoint[] happy = new DataPoint[list.size()];
+            DataPoint[] sadness = new DataPoint[list.size()];
+            DataPoint[] happiness = new DataPoint[list.size()];
+            DataPoint[] neutral = new DataPoint[list.size()];
 
             for (int i = list.size() -1 ; i >= 0 ; i--) {
                 Date X =  new SimpleDateFormat("yyyy-MM-dd").parse(list.get(i).date);
-                double Y = list.get(i).anger;
-                anger[list.size()- 1 - i] = new DataPoint(X, Y);
+                double Y = list.get(i).sadness + list.get(i).anger + list.get(i).contempt + list.get(i).disgust + list.get(i).fear ;
+                sadness[list.size()- 1 - i] = new DataPoint(X, Y);
 
-                Y = list.get(i).happiness;
-                happy[list.size()- 1 - i] = new DataPoint(X, Y);
+                Y = list.get(i).happiness + list.get(i).surprise;
+                happiness[list.size()- 1 - i] = new DataPoint(X, Y);
+
+                Y = list.get(i).neutral;
+                neutral[list.size() -1 -i] = new DataPoint(X, Y);
             }
 
 
-            LineGraphSeries<DataPoint> angerSeries = new LineGraphSeries<DataPoint>(anger);
-            angerSeries.setTitle("anger");
-            angerSeries.setDataPointsRadius(5);
-            angerSeries.setDrawDataPoints(true);
-            angerSeries.setColor(Color.RED);
-            angerSeries.setAnimated(true);
-//        LineGraphSeries<DataPoint> contemptSeries = new LineGraphSeries<>();
-//        LineGraphSeries<DataPoint> disgustSeries = new LineGraphSeries<>();
-//        LineGraphSeries<DataPoint> fearSeries = new LineGraphSeries<>();
-            LineGraphSeries<DataPoint> happinessSeries = new LineGraphSeries<>(happy);
-            happinessSeries.setTitle("happiness");
+            LineGraphSeries<DataPoint> sadnessSeries = new LineGraphSeries<DataPoint>(sadness);
+            sadnessSeries.setTitle("Sadness");
+            sadnessSeries.setDataPointsRadius(5);
+            sadnessSeries.setDrawDataPoints(true);
+            sadnessSeries.setColor(Color.RED);
+            sadnessSeries.setAnimated(true);
+
+            LineGraphSeries<DataPoint> happinessSeries = new LineGraphSeries<>(happiness);
+            happinessSeries.setTitle("Happiness");
             happinessSeries.setDrawDataPoints(true);
             happinessSeries.setDataPointsRadius(5);
             happinessSeries.setColor(Color.BLUE);
             happinessSeries.setAnimated(true);
-//        LineGraphSeries<DataPoint> neutralSeries = new LineGraphSeries<>();
+
+            LineGraphSeries<DataPoint> neutralSeries = new LineGraphSeries<>();
+            neutralSeries.setTitle("Neutral");
+            neutralSeries.setDrawDataPoints(true);
+            neutralSeries.setDataPointsRadius(5);
+            neutralSeries.setColor(Color.YELLOW);
+            neutralSeries.setAnimated(true);
 //        LineGraphSeries<DataPoint> sadSeries = new LineGraphSeries<>();
 //        LineGraphSeries<DataPoint> surpriseSeries = new LineGraphSeries<>();
 
@@ -85,8 +93,9 @@ public class GraphHelper {
 
             graphView.getGridLabelRenderer().setHumanRounding(false);
 
-            graphView.addSeries(angerSeries);
+            graphView.addSeries(sadnessSeries);
             graphView.addSeries(happinessSeries);
+            graphView.addSeries(neutralSeries);
         }catch (Exception e){
 
         }

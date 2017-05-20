@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="listItemColor">#b5d4ff</color>
     <color name="green">#ffffff</color>
+    <color name="holo_blue_bright">#00DDFF</color>
+    <color name="holo_orange_light">#FFBB33</color>
+
 </resources>

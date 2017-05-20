@@ -169,10 +169,12 @@ public class Emotion {
                 ", avg(neutral) as neutral" +
                 ", avg(sadness) as sadness" +
                 ", avg(surprise) as surprise" +
-                ",  substr(date,1,10) as dateOnly " +
-                " from emotion group by dateOnly " +
+                ", substr(date,1,10) as dateOnly " +
+                " from emotion " +
+                " where anger !=0 or contempt !=0 or disgust !=0 or fear !=0 or happiness != 0 or neutral != 0 or sadness != 0 or surprise !=0" +
+                " group by dateOnly " +
                 " order by dateOnly desc" +
-                " limit 15" ;
+                " limit 10" ;
         Cursor cursor = database.rawQuery(sqlQuery , null);
 
 
