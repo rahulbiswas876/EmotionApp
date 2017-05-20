@@ -2,8 +2,10 @@ package com.example.naveen.EmotionApp;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -88,7 +90,7 @@ public class WriteNotesActivity extends AppCompatActivity {
             //new ImageLoader(null, this).execute(capturedImageFilePath);
             //new DoNetworkTask(this).execute(capturedImageFilePath);
             //createMessage("system", "Diary: Would you like to tell me something about today ?");
-            Toast.makeText(this,"Test",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"Test",Toast.LENGTH_SHORT).show();
             new ImageLoader(null, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, capturedImageFilePath);
             if(Helper.isInternetOn(getApplicationContext())) {
                 new DoNetworkTask(this, false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, capturedImageFilePath);
@@ -235,7 +237,23 @@ public class WriteNotesActivity extends AppCompatActivity {
             //if emotion is not cached, do network task else get emotions from database
             if(!isEmotionCached){
                 emotion = new ImageProcessor().processEmotions(strings[0]);
-                boolean isSaved = emotion.save(getApplicationContext());
+                if(emotion != null) {
+                    boolean isSaved = emotion.save(getApplicationContext());
+                }else{
+                    //when ImageProcessor unable to detect face and hence emotions, initialize emotions with picture and date only and save the
+                    String date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(new Date()).toString();
+                    String sql = "Insert into emotion (date , fileName) values ( '"+ date +"', '"+ capturedImageFilePath +"' )";
+                    DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+                    SQLiteDatabase database = databaseHelper.getWritableDatabase();
+                    ContentValues contentValues = new ContentValues();
+
+                    contentValues.put(Emotion.TableInof.COL_DATE, date);
+                    contentValues.put(Emotion.TableInof.COL_FILE, capturedImageFilePath);
+
+                    //insert return -1 if there is error
+                    boolean isSaved = database.insert(Emotion.TableInof.TABLE, null, contentValues)== -1 ? false : true ;
+
+                }
             }else {
                 String sql = "select anger,contempt,disgust,fear,happiness," +
                         "neutral,sadness,surprise,date,fileName from emotion where fileName=" + "'" + strings[0]  + "'";
@@ -339,7 +357,7 @@ public class WriteNotesActivity extends AppCompatActivity {
                 }
             }
             else {
-                createMessage("system", "Diary: I can't seem to find any emotions right now, you can still write to me :)");
+                createMessage("system", "Diary: I can't seem to find any human face, you can still write to me :)");
             }
             System.out.println("exiting second async task post");
         }

@@ -33,7 +33,7 @@ public class GraphHelper {
             //graphView.getGridLabelRenderer().reloadStyles();
             DataPoint[] sadness = new DataPoint[list.size()];
             DataPoint[] happiness = new DataPoint[list.size()];
-            DataPoint[] neutral = new DataPoint[list.size()];
+            //DataPoint[] neutral = new DataPoint[list.size()];
 
             for (int i = list.size() -1 ; i >= 0 ; i--) {
                 Date X =  new SimpleDateFormat("yyyy-MM-dd").parse(list.get(i).date);
@@ -43,8 +43,8 @@ public class GraphHelper {
                 Y = list.get(i).happiness + list.get(i).surprise;
                 happiness[list.size()- 1 - i] = new DataPoint(X, Y);
 
-                Y = list.get(i).neutral;
-                neutral[list.size() -1 -i] = new DataPoint(X, Y);
+//                Y = list.get(i).neutral;
+//                neutral[list.size() -1 -i] = new DataPoint(X, Y);
             }
 
 
@@ -62,12 +62,12 @@ public class GraphHelper {
             happinessSeries.setColor(Color.BLUE);
             happinessSeries.setAnimated(true);
 
-            LineGraphSeries<DataPoint> neutralSeries = new LineGraphSeries<>();
-            neutralSeries.setTitle("Neutral");
-            neutralSeries.setDrawDataPoints(true);
-            neutralSeries.setDataPointsRadius(5);
-            neutralSeries.setColor(Color.YELLOW);
-            neutralSeries.setAnimated(true);
+//            LineGraphSeries<DataPoint> neutralSeries = new LineGraphSeries<>();
+//            neutralSeries.setTitle("Neutral");
+//            neutralSeries.setDrawDataPoints(true);
+//            neutralSeries.setDataPointsRadius(5);
+//            neutralSeries.setColor(Color.YELLOW);
+//            neutralSeries.setAnimated(true);
 //        LineGraphSeries<DataPoint> sadSeries = new LineGraphSeries<>();
 //        LineGraphSeries<DataPoint> surpriseSeries = new LineGraphSeries<>();
 
@@ -95,7 +95,7 @@ public class GraphHelper {
 
             graphView.addSeries(sadnessSeries);
             graphView.addSeries(happinessSeries);
-            graphView.addSeries(neutralSeries);
+            //graphView.addSeries(neutralSeries);
         }catch (Exception e){
 
         }
