@@ -23,6 +23,9 @@ import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class WriteNotesActivity extends AppCompatActivity {
     String capturedImageFilePath = "";
     NestedScrollView nestedScrollView;
@@ -36,7 +39,7 @@ public class WriteNotesActivity extends AppCompatActivity {
         sendMsgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickSendMsgButton();
+                saveMsg();
             }
         });
 
@@ -87,12 +90,28 @@ public class WriteNotesActivity extends AppCompatActivity {
             //createMessage("system", "Diary: Would you like to tell me something about today ?");
             Toast.makeText(this,"Test",Toast.LENGTH_SHORT).show();
             new ImageLoader(null, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, capturedImageFilePath);
-            new DoNetworkTask(this, false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, capturedImageFilePath);
+            if(Helper.isInternetOn(getApplicationContext())) {
+                new DoNetworkTask(this, false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, capturedImageFilePath);
+            }else{
+                saveImageWithoutEmotions();
+            }
         }
         else{
             finish();
         }
     }
+
+    private void saveImageWithoutEmotions() {
+        Emotion emotion = new Emotion();
+        emotion.fileName = capturedImageFilePath;
+        emotion.date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(new Date()).toString();
+
+        boolean isSaved = emotion.save(getApplicationContext());
+        LinearLayout progressBarViewLayout = (LinearLayout)findViewById(R.id.progressBarView);
+        progressBarViewLayout.setVisibility(View.GONE);
+        System.out.println(isSaved);
+    }
+
     protected void createMessage(String who, String text) {
         // Add text views dynamically
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.interactBox);
@@ -134,8 +153,8 @@ public class WriteNotesActivity extends AppCompatActivity {
         }
     }
 
-    //On send text button
-    protected void onClickSendMsgButton() {
+    //save user msg to DB
+    protected void saveMsg() {
         EditText messageText = (EditText) findViewById(R.id.messageText);
         String message = messageText.getText().toString();
         if ( message != null && !message.isEmpty() ) {
@@ -146,7 +165,7 @@ public class WriteNotesActivity extends AppCompatActivity {
             UserMsg.InserMsg(getApplicationContext(),capturedImageFilePath, message);
             messageText.setText("");
         }
-        Log.d("TAG", "onClickSendMsgButton: After Click");
+        Log.d("TAG", "saveMsg: After Click");
     }
 
     protected int maxOfThree(float x, float y, float z) {
@@ -302,7 +321,10 @@ public class WriteNotesActivity extends AppCompatActivity {
                         e = "Mixed feelings ?";
                     }
 
-                    createMessage("system", "Diary: " + e);
+                    if(max != 0){
+                        //it means emotion is fetched from micrsosft api
+                        createMessage("system", "Diary: " + e);
+                    }
                 //}
 
                 //Save emotion to database

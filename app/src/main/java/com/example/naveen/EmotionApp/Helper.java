@@ -1,5 +1,9 @@
 package com.example.naveen.EmotionApp;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -45,5 +49,11 @@ public class Helper {
         }
 
         return customFormatter.format(date);
+    }
+
+    public static boolean isInternetOn(Context context){
+        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfol = connectivityManager.getActiveNetworkInfo();
+        return networkInfol != null && networkInfol.isConnected();
     }
 }

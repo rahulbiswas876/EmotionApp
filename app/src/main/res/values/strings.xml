@@ -5,6 +5,7 @@
     <string name="title_activity_first">Reflection</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_write_notes">WriteNotes</string>
+    <string name="NetworkMsg">No internet connection</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

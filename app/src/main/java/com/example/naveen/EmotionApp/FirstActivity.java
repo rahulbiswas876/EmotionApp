@@ -2,16 +2,22 @@ package com.example.naveen.EmotionApp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -44,7 +50,7 @@ import com.jjoe64.graphview.GraphView;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class FirstActivity extends AppCompatActivity {
+public class FirstActivity extends AppCompatActivity implements NetworkInfoDialog.NoticeDialogListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -91,6 +97,24 @@ public class FirstActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        //Toast.makeText(getApplicationContext(),"allow",Toast.LENGTH_SHORT).show();
+        askForCameraPermission();
+        if(isCameraGranted){
+            Intent intent = new Intent(this, WriteNotesActivity.class);
+            this.startActivity(intent);
+
+        }else{
+            Toast.makeText(this, "Access to camera is not granted", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        //Toast.makeText(getApplicationContext(),"deny",Toast.LENGTH_SHORT).show();
+    }
+
     private class FloatingActionButtonClickHandler implements View.OnClickListener{
 
         private  Activity currentActivity = null;
@@ -100,32 +124,47 @@ public class FirstActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            //take photo and save it assigning unique name to image file.
-
-            if (ContextCompat.checkSelfPermission(currentActivity,
-                    Manifest.permission.CAMERA)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(currentActivity,
-                        new String[]{Manifest.permission.CAMERA},
-                        MY_PERMISSIONS_REQUEST_ACCESS_CAMERA);
 
 
-            }else{
-                isCameraGranted = true;
-            }
+            if(isInternetOn()){
+                askForCameraPermission();
+                if(isCameraGranted){
+                    Intent intent = new Intent(currentActivity, WriteNotesActivity.class);
+                    currentActivity.startActivity(intent);
+                }else{
+                    Toast.makeText(currentActivity, "Access to camera is not granted", Toast.LENGTH_SHORT).show();
+                }
 
-            if(isCameraGranted){
-                Intent intent = new Intent(currentActivity, WriteNotesActivity.class);
-                currentActivity.startActivity(intent);
-
-            }else{
-                Toast.makeText(currentActivity, "Access to camera is not granted", Toast.LENGTH_SHORT).show();
+            }else {
+                NetworkInfoDialog networkInfoDialog = new NetworkInfoDialog();
+                networkInfoDialog.show(getSupportFragmentManager(),"Internet");
             }
 
         }
+
+        private boolean isInternetOn(){
+            ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfol = connectivityManager.getActiveNetworkInfo();
+            return networkInfol != null && networkInfol.isConnected();
+        }
+
+
     }
 
+    private void askForCameraPermission(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_ACCESS_CAMERA);
+
+
+        }else{
+            isCameraGranted = true;
+        }
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -149,8 +188,6 @@ public class FirstActivity extends AppCompatActivity {
                 return;
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
