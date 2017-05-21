@@ -357,7 +357,7 @@ public class WriteNotesActivity extends AppCompatActivity {
                 }
             }
             else {
-                createMessage("system", "Diary: I can't seem to find any human face, you can still write to me :)");
+                createMessage("system", "Diary: Are you sure there's a face in the pic ? Anyway you can still write to me :)");
             }
             System.out.println("exiting second async task post");
         }

@@ -43,7 +43,7 @@ public class NetworkInfoDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Build the dialog and set up the button click handlers
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("No Inter Connection")
+        builder.setTitle("No Internet Connection")
                 .setMessage(R.string.NetworkMsg)
                 .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

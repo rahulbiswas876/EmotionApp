@@ -5,5 +5,5 @@
     <string name="title_activity_first">Reflection</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_write_notes">WriteNotes</string>
-    <string name="NetworkMsg">Turn on internet to save your feelings and emotions or click ALLOW to save only feelings </string>
+    <string name="NetworkMsg">I can\'t find your emotions without internet, continue anyway?</string>
 </resources>
